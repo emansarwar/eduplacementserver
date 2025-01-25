@@ -59,9 +59,10 @@ async function run() {
     app.get("/users", async (req, res) => {
       const email = req.query.email;
       console.log("Received email:", email);
-
+      
       try {
         const user = await userCollection.findOne({ email });
+        res.send(user);
         console.log("Queried user:", user); // Log the user from the database
         if (user) {
           res.send(user);
@@ -72,6 +73,13 @@ async function run() {
         console.error("Error fetching user:", error);
         res.status(500).send({ message: "Internal server error" });
       }
+    });
+    app.get("/user", async (req, res) => {
+    //   const email = req.query.email;
+    //   console.log("Received email:", email);
+      const users = await userCollection.find().toArray();
+    res.send(users);
+    
     });
 
     app.put("/users", async (req, res) => {
@@ -116,7 +124,7 @@ async function run() {
 run().catch(console.dir);
 
 app.get("/", (req, res) => {
-  res.send("foodedu website");
+  res.send("foodedu website is running");
 });
 
 app.listen(port, () => {
